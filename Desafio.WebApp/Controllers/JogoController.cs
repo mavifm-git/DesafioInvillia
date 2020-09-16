@@ -35,13 +35,7 @@ namespace Desafio.WebApp.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-
             var jogoViewModel = _mapper.Map<JogoViewModel>(await _jogoService.BuscarPorID(id));
-
-            if (jogoViewModel == null)
-            {
-                return NotFound();
-            }
 
             jogoViewModel.Emprestimo = _mapper.Map<IEnumerable<EmprestimoViewModel>>(await _emprestimoService.ObterEmprestimosJogo(id));
 
@@ -71,23 +65,13 @@ namespace Desafio.WebApp.Controllers
         {
             var jogoViewModel = _mapper.Map<JogoViewModel>(await _jogoService.BuscarPorID(id));
 
-            if (jogoViewModel == null)
-            {
-                return NotFound();
-            }
-
             return View(jogoViewModel);
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id,JogoViewModel jogoViewModel)
+        public async Task<IActionResult> Edit(JogoViewModel jogoViewModel)
         {
-            if (id != jogoViewModel.Id)
-            {
-                return NotFound();
-            }
-
             if (!ModelState.IsValid) return View(jogoViewModel);
 
 
@@ -102,11 +86,6 @@ namespace Desafio.WebApp.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var jogoViewModel = _mapper.Map<JogoViewModel>(await _jogoService.BuscarPorID(id));
-
-            if (jogoViewModel == null)
-            {
-                return NotFound();
-            }
 
             return View(jogoViewModel);
         }

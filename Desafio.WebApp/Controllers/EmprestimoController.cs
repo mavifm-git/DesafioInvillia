@@ -40,11 +40,6 @@ namespace Desafio.WebApp.Controllers
         {
             var emprestimoViewModel = _mapper.Map<EmprestimoViewModel>(await _emprestimoService.ObterEmprestimosPessoaJogo(id));
 
-            if (emprestimoViewModel == null)
-            {
-                return NotFound();
-            }
-
             return View(emprestimoViewModel);
         }
 
@@ -62,7 +57,6 @@ namespace Desafio.WebApp.Controllers
             listJogos.Insert(0, new JogoViewModel { Nome = "Selecione" });
 
             emprestimoViewModel.Jogos = listJogos;
-
             emprestimoViewModel.DataEmprestimo = DateTime.Today;
 
             return View(emprestimoViewModel);
@@ -86,12 +80,6 @@ namespace Desafio.WebApp.Controllers
         {
             var emprestimoViewModel = _mapper.Map<EmprestimoViewModel>(await _emprestimoService.BuscarPorID(id));
 
-            if (emprestimoViewModel == null)
-            {
-                return NotFound();
-            }
-
-
             emprestimoViewModel.Pessoas = _mapper.Map<IEnumerable<PessoaViewModel>>(await _pessoaService.BuscarTodos()).ToList();
             emprestimoViewModel.Jogos = _mapper.Map<IEnumerable<JogoViewModel>>(await _jogoService.BuscarTodos()).ToList();
 
@@ -102,13 +90,8 @@ namespace Desafio.WebApp.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, EmprestimoViewModel emprestimoViewModel)
+        public async Task<IActionResult> Edit(EmprestimoViewModel emprestimoViewModel)
         {
-            if (id != emprestimoViewModel.Id)
-            {
-                return NotFound();
-            }
-
             if (!ModelState.IsValid) return View(emprestimoViewModel);
 
 
@@ -122,11 +105,6 @@ namespace Desafio.WebApp.Controllers
         public async Task<IActionResult> Devolution(int id)
         {
             var emprestimoViewModel = _mapper.Map<EmprestimoViewModel>(await _emprestimoService.ObterEmprestimosPessoaJogo(id));
-
-            if (emprestimoViewModel == null)
-            {
-                return NotFound();
-            }
 
             emprestimoViewModel.DataDevolucao = DateTime.Today;
 
@@ -146,18 +124,12 @@ namespace Desafio.WebApp.Controllers
         {
             var emprestimoViewModel = _mapper.Map<EmprestimoViewModel>(await _emprestimoService.ObterEmprestimosPessoaJogo(id));
 
-            if (emprestimoViewModel == null)
-            {
-                return NotFound();
-            }
-
             return View(emprestimoViewModel);
         }
 
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-
             await _emprestimoService.Remover(id);
 
             return RedirectToAction("Index");

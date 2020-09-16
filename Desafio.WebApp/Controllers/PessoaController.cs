@@ -32,7 +32,7 @@ namespace Desafio.WebApp.Controllers
 
 
 
-   
+
         public async Task<IActionResult> Index()
         {
             return View(_mapper.Map<IEnumerable<PessoaViewModel>>(await _pessoaService.BuscarTodos()));
@@ -41,22 +41,14 @@ namespace Desafio.WebApp.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-
-
             var pessoaViewModel = _mapper.Map<PessoaViewModel>(await _pessoaService.BuscarPorID(id));
 
-            if (pessoaViewModel == null)
-            {
-                return NotFound();
-            }
-
-
-            pessoaViewModel.Emprestimo = _mapper.Map<IEnumerable<EmprestimoViewModel>> (await _emprestimoService.ObterEmprestimosPessoa(id));
+            pessoaViewModel.Emprestimo = _mapper.Map<IEnumerable<EmprestimoViewModel>>(await _emprestimoService.ObterEmprestimosPessoa(id));
 
             return View(pessoaViewModel);
         }
 
-        
+
         public IActionResult Create()
         {
             return View();
@@ -74,29 +66,18 @@ namespace Desafio.WebApp.Controllers
             return RedirectToAction("Index");
         }
 
-  
+
         public async Task<IActionResult> Edit(int id)
         {
-
             var pessoaViewModel = _mapper.Map<PessoaViewModel>(await _pessoaService.BuscarPorID(id));
-
-            if (pessoaViewModel == null)
-            {
-                return NotFound();
-            }
 
             return View(pessoaViewModel);
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, PessoaViewModel pessoaViewModel)
+        public async Task<IActionResult> Edit(PessoaViewModel pessoaViewModel)
         {
-            if (id != pessoaViewModel.Id)
-            {
-                return NotFound();
-            }
-
             if (!ModelState.IsValid) return View(pessoaViewModel);
 
 
@@ -109,13 +90,7 @@ namespace Desafio.WebApp.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-
             var pessoaViewModel = _mapper.Map<PessoaViewModel>(await _pessoaService.BuscarPorID(id));
-
-            if (pessoaViewModel == null)
-            {
-                return NotFound();
-            }
 
             return View(pessoaViewModel);
         }
@@ -125,7 +100,6 @@ namespace Desafio.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-
             await _pessoaService.Remover(id);
 
             return RedirectToAction("Index");
